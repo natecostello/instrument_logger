@@ -2,7 +2,7 @@ This is a package that implements a logging class and defines an interface for i
 
 Working idea:
 
-`Logger`:
+`InstrumentLogger`:
 - a class for logging data from instruments to a file in a csv or simlar format that we can use panda's to analyze.
 - it can recieve a name that is prepended to the file it writes to, which is always named by the time/date of it when it starts logging
 - it can log continuously, at a requested frequency
