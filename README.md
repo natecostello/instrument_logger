@@ -10,7 +10,7 @@ Working idea:
 - it can log on demand if not logging continuously
 - it logs all data from all instruments assigned to it
 - each log entry is time/date stamped
-- it can be queried for its last log entry, in which case it will return a dict of all parameter measurements keyed by parameter name including the timestamp for the log entry.
+- it can be queried for its last log entry, in which case it will return a dict of all parameter measurements keyed by parameter name ~~including the timestamp for the log entry~~.
 
 `Instrument`: 
 - a thing that measures things and can be asked to provide data.  This will be an abstract interface that is implemented by things.  The interface is what logger uses.
