@@ -138,11 +138,11 @@ test_logger.addinstrument(test_inst)
 print('Test adding file prefix')
 test_logger.filenameprefix = 'name'
 
-print('Test single log')
-test_logger.log()
+# print('Test single log')
+# test_logger.log()
 
-print('Test another single log')
-test_logger.log()
+# print('Test another single log')
+# test_logger.log()
 
 print('Test continous for 5 seconds')
 test_logger.start()

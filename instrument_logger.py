@@ -84,7 +84,7 @@ class InstrumentLogger:
     def __logcontinuous(self):
         # TODO: think about how to keep from slowly drifting
         while self._keeplogging:
-            if (datetime.now() >= self._lastlogtime + timedelta(seconds=self._frequency)):
+            if (self._lastlogtime == '' or datetime.now() >= self._lastlogtime + timedelta(seconds=self._frequency)):
                 self.log()
             else:
                 sleep(0.1)
