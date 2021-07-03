@@ -1,6 +1,19 @@
 This is a package that implements a logging class and defines an interface for instruments that can be logged by the class.
 
-Working idea:
+
+## instrument_logger
+
+### Getting Started
+
+```
+%python3 -m pip install git+https://github.com/natecostello/instrument_logger
+%python3
+>>> from instrument_logger import InstrumentLogger
+>>> il = InstrumentLogger()
+```
+
+
+### Working idea / rough spec:
 
 `InstrumentLogger`:
 - a class for logging data from instruments to a file in a csv or simlar format that we can use panda's to analyze.
