@@ -20,6 +20,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    py_modules=['instrument_logger_NSC'],
+    py_modules=['instrument_logger'],
     python_requires=">=3.6",
 )

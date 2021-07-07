@@ -1,4 +1,4 @@
-from context import instrument_logger_NSC
+from context import instrument_logger
 from instrument_logger import Instrument, InstrumentLogger
 from time import sleep
 import random
