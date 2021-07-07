@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="instrument_logger_NSC",
+    name="instrument_logger-NSC",  # Replace with your own username
     version="0.0.1",
     author="Nate Costello",
     author_email="natecostello@gmail.com",
