@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="instrument_logger-NSC",
+    name="instrument_logger_NSC",
     version="0.0.1",
     author="Nate Costello",
     author_email="natecostello@gmail.com",
@@ -20,6 +20,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    py_modules=['instrument_logger-NSC'],
+    py_modules=['instrument_logger_NSC'],
     python_requires=">=3.6",
 )
