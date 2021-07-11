@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from time import sleep
 from abc import ABC, abstractmethod
 from threading import Thread
+import os
 
 class Instrument(ABC):
     """An abstract class that provides an interface for objects to use InstrumentLogger"""
@@ -39,7 +40,6 @@ class InstrumentLogger:
         self._lastlogentry = ''
         self._lastlogparams = []
         self._lastlogtime = ''
-        self._filenameprefix = ''
         self._filehandler = None
         self._logger = None
         self._instruments = []
@@ -47,6 +47,7 @@ class InstrumentLogger:
         self._keeplogging = False
         self._unique_instance_name = str(datetime.now()) #insures this instance's logger is unique
         self._filename = ''
+        self._filename_marker = 0
 
     def __initializelogger(self, time: str):
 
@@ -64,12 +65,21 @@ class InstrumentLogger:
 
         # set fileHandler
         # TODO check to see if file corresponding to self._filename exits
-        # TODO check to see if self._filename == '' 
-        #           if so, use default name based on time (do not update self._filename)
-        #           if not, check IF file corresponding to self._filename exists
-        #               if so, change self._filename to add marker at end of self._filename to make unique (maybe do this setter for filename)
-        #               if not proceed with self._filename
-        filename = self._filenameprefix + '_' + time.replace(" ", "_").replace(":", "_") + ".csv"
+        # if self._filename == '' (has not been set) -> use default based on time
+        # if self._filename != '' (has been set) and file with self._filename exists OR file with self._filename + unique marker exists ->
+        #   update unique marker and use to name file uniquely
+        # otherwise use self._filename
+        if (self._filename == ''):
+            filename = time.replace(" ", "_").replace(":", "_") + ".csv"
+        elif os.path.exists(self._filename + '.csv'):
+            filename = self._filename + '_' + str(self._filename_marker + 1) + '.csv'
+            self._filename_marker += 1
+        elif os.path.exists(self._filename + '_' + self._filename_marker + '.csv'):
+            filename = self._filename + '_' + str(self._filename_marker + 1) + '.csv'
+            self._filename_marker += 1
+        else:
+            filename = self._filename + '.csv'
+
         fh = logging.FileHandler(filename, delay=True)
         self._filename = filename
         fh.setLevel(logging.DEBUG)
@@ -124,23 +134,17 @@ class InstrumentLogger:
     def headerstring(self):
         """Get a string of csv headers of format 'time,instrument_name.parameter_name.parameter_unit,...' or empty string"""
         return self._header
-
-    @property
-    def filenameprefix(self) -> str:
-        """Get the filename prefix, default is empty string"""
-        return self._filenameprefix
-    
-    @filenameprefix.setter
-    def filenameprefix(self, prefix: str):
-        """Filenames are by default named from the time of creation.  
-        A prefix adds descriptive text to the filename.  Will interrupt logging and start a new log file."""
-        self._filenameprefix = prefix
-        self.newlog()
     
     @property
     def filename(self) -> str:
         """The filename currently in use for logging"""
         return self._filename
+    
+    @filename.setter
+    def filename(self, name: str):
+        """Set the filename.  Will interrupt logging and start a new log file"""
+        self._filename = name
+        self.newlog
 
     def addinstrument(self, instrument: Instrument):
         """Add an instrument to be logged.  Will stop continuous logging.  
