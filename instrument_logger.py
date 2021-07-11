@@ -74,14 +74,13 @@ class InstrumentLogger:
         elif os.path.exists(self._filename + '.csv'):
             filename = self._filename + '_' + str(self._filename_marker + 1) + '.csv'
             self._filename_marker += 1
-        elif os.path.exists(self._filename + '_' + self._filename_marker + '.csv'):
+        elif os.path.exists(self._filename + '_' + str(self._filename_marker) + '.csv'):
             filename = self._filename + '_' + str(self._filename_marker + 1) + '.csv'
             self._filename_marker += 1
         else:
             filename = self._filename + '.csv'
 
         fh = logging.FileHandler(filename, delay=True)
-        self._filename = filename
         fh.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(message)s')
         fh.setFormatter(formatter)
@@ -93,10 +92,10 @@ class InstrumentLogger:
         if self._logger:
             self._logger.removeHandler(self._filehandler)
             self._logger = None
+            self._filehandler.close()
             self._filehandler = None
             self._header = ''
-            self._filename = ''
-
+            
     def __logcontinuous(self):
         # TODO: think about how to keep from slowly drifting
         while self._keeplogging:
@@ -144,7 +143,7 @@ class InstrumentLogger:
     def filename(self, name: str):
         """Set the filename.  Will interrupt logging and start a new log file"""
         self._filename = name
-        self.newlog
+        self.newlog()
 
     def addinstrument(self, instrument: Instrument):
         """Add an instrument to be logged.  Will stop continuous logging.  
@@ -155,7 +154,7 @@ class InstrumentLogger:
     def newlog(self):
         """Start a new log file for next logged event.  Will stop continous logging."""
         self.stop()
-        sleep(0.2)
+        # sleep(0.2)
         self.__terminatelogger()
 
     def start(self):

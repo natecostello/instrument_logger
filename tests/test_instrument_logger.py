@@ -7,6 +7,8 @@ import os
 
 import unittest
 
+print('Testing...')
+os.system('rm *.csv')
 
 param1_name = 'param1'
 param1_unit = 'unit1'
@@ -96,89 +98,141 @@ class InstrumentLoggerConstructorTestCase(unittest.TestCase):
     def test_headerstring(self):
         self.assertEqual(self.inst_logger.headerstring, '')
 
-    def test_filenameprefix(self):
-        self.assertEqual(self.inst_logger.filenameprefix, '')
-    
-    def test_filenameprefix_setter(self):
-        old_prefix = self.inst_logger.filenameprefix
-        new_prefix = 'alajflsdfj'
-        self.inst_logger.filenameprefix = new_prefix
-        self.assertEqual(self.inst_logger.filenameprefix, new_prefix)
-        self.inst_logger.filenameprefix = old_prefix
-    
     def test_filename(self):
         self.assertEqual(self.inst_logger.filename, '')
     
+    def test_filename_setter(self):
+        old_filename = self.inst_logger.filename
+        new_filename = 'alajflsdfj'
+        self.inst_logger.filename = new_filename
+        self.assertEqual(self.inst_logger.filename, new_filename)
+        self.inst_logger.filename = old_filename
+    
+class InstrumentLoggerFileNamingTestCase(unittest.TestCase):
+    def setUp(self):
+        self.instrument = TestInstrument(test_inst_name)
+        self.inst_logger = InstrumentLogger()
+        self.inst_logger.addinstrument(self.instrument)
+    
+    def test_default_filename(self):
+        os.system('rm *.csv')
+
+        self.inst_logger.start()
+        sleep(2)
+        self.inst_logger.stop()
+
+        count = 0
+        for fname in os.listdir('.'):
+            if fname.endswith('.csv'):
+                count += 1
+        
+        self.assertEqual(count, 1)
+    
+    def test_non_default_filename(self):
+        os.system('rm *.csv')
+        test_filename = 'test'
+
+        self.inst_logger.filename = test_filename
+        self.inst_logger.start()
+        sleep(1)
+        self.inst_logger.stop()
+
+        self.assertTrue(os.path.exists(test_filename + '.csv'))
+        os.system('rm *.csv')
+        
+    def test_non_default_filename_newlog(self):
+        os.system('rm *.csv')
+        test_filename = 'test'
+        self.inst_logger.filename = test_filename
+        self.inst_logger.start()
+        sleep(1)
+        self.inst_logger.stop()
+        self.inst_logger.newlog()
+        self.inst_logger.start()
+        sleep(1)
+        self.inst_logger.stop()
+        self.assertTrue(os.path.exists(test_filename + '.csv') and os.path.exists(test_filename + '_1.csv'))
+        os.system('rm *.csv')
+
+    def test_rename_while_logging(self):
+        os.system('rm *.csv')
+        test_filename = 'test'
+        test_filename_2 = 'test2'
+        self.inst_logger.filename = test_filename
+        self.inst_logger.start()
+        sleep(1)
+        self.inst_logger.filename = test_filename_2
+        self.inst_logger.start()
+        sleep(1)
+        self.inst_logger.stop()
+        self.assertTrue(os.path.exists(test_filename + '.csv') and os.path.exists(test_filename_2 + '.csv'))
+        os.system('rm *.csv')
+
+        
+
+
+
+
 
     
 
+# print('Testing Instrument instantiation')
+# test_inst = TestInstrument('test_inst_1')
 
-print('Testing...')
-os.system('rm *.csv')
+# print('Testing getParameters')
+# params = test_inst.parameters
+# print(params)
 
-print('Testing Instrument instantiation')
-test_inst = TestInstrument('test_inst_1')
+# print('Testing getMeasurement')
+# print(test_inst.getmeasurement(params[0]))
 
-print('Testing getParameters')
-params = test_inst.parameters
-print(params)
+# print('Testing getAllMeasurement')
+# print(test_inst.allmeasurements)
 
-print('Testing getMeasurement')
-print(test_inst.getmeasurement(params[0]))
+# print('Testing InstrumentLogger instantiation')
+# test_logger = InstrumentLogger()
 
-print('Testing getAllMeasurement')
-print(test_inst.allmeasurements)
+# print('Testing addInstrument')
+# test_logger.addinstrument(test_inst)
 
-print('Testing InstrumentLogger instantiation')
-test_logger = InstrumentLogger()
 
-print('Testing addInstrument')
-test_logger.addinstrument(test_inst)
 
-print('Test adding file prefix')
-test_logger.filenameprefix = 'name'
+# # print('Test single log')
+# # test_logger.log()
 
-# print('Test single log')
+# # print('Test another single log')
+# # test_logger.log()
+
+# print('Test continous for 5 seconds')
+# test_logger.start()
+# sleep(5)
+# test_logger.stop()
+
+
+# print('Test continous for 5 seconds')
+# test_logger.start()
+# sleep(5)
+# test_logger.stop()
+
+# print('Test adding a second instrument')
+# test_inst2 = TestInstrument('test_inst_2')
+# test_logger.addinstrument(test_inst2)
+
+# print('Test continous for 5 seconds')
+# test_logger.start()
+# sleep(5)
+# test_logger.stop()
+
+# print('Test higher frequency')
+# test_logger.frequency = .5
+
+# print('Test continous for 5 seconds')
+# test_logger.start()
+# sleep(5)
+# test_logger.stop()
+
+# print('Test logger with no instruments')
+
+# print('Testing InstrumentLogger instantiation')
+# test_logger = InstrumentLogger()
 # test_logger.log()
-
-# print('Test another single log')
-# test_logger.log()
-
-print('Test continous for 5 seconds')
-test_logger.start()
-sleep(5)
-test_logger.stop()
-
-print('Test adding new file prefix while logging')
-test_logger.start()
-sleep(1)
-test_logger.filenameprefix = 'name2'
-
-print('Test continous for 5 seconds')
-test_logger.start()
-sleep(5)
-test_logger.stop()
-
-print('Test adding a second instrument')
-test_inst2 = TestInstrument('test_inst_2')
-test_logger.addinstrument(test_inst2)
-
-print('Test continous for 5 seconds')
-test_logger.start()
-sleep(5)
-test_logger.stop()
-
-print('Test higher frequency')
-test_logger.frequency = .5
-
-print('Test continous for 5 seconds')
-test_logger.start()
-sleep(5)
-test_logger.stop()
-
-print('Test logger with no instruments')
-
-print('Testing InstrumentLogger instantiation')
-test_logger = InstrumentLogger()
-test_logger.filenameprefix = 'name' 
-test_logger.log()
