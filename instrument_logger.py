@@ -63,6 +63,12 @@ class InstrumentLogger:
         self._logger = logger
 
         # set fileHandler
+        # TODO check to see if file corresponding to self._filename exits
+        # TODO check to see if self._filename == '' 
+        #           if so, use default name based on time (do not update self._filename)
+        #           if not, check IF file corresponding to self._filename exists
+        #               if so, change self._filename to add marker at end of self._filename to make unique (maybe do this setter for filename)
+        #               if not proceed with self._filename
         filename = self._filenameprefix + '_' + time.replace(" ", "_").replace(":", "_") + ".csv"
         fh = logging.FileHandler(filename, delay=True)
         self._filename = filename
